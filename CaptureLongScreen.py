@@ -2,6 +2,8 @@ from PIL import Image
 import numpy as np
 from glob import glob
 import os
+from scipy import stats
+import sys
 '''
 将两张有重叠的图片拼接成一张长图，目标效果：123+234 →1234
 '''
@@ -29,8 +31,13 @@ def FindBorder(imgA,imgB,windowMove = 1):
     for i in range(1,length,windowMove):#从1开始是因为0的情况在上面已经判断过了
         B = b[:length-i]#B图从下往上缩小范围
         A = a[-B.shape[0]:]#A图对应的从上往下缩小范围
-        if not (A - B).any():#AB对齐，找到了重合区，返回此时的分界位
-            return b.shape[0] - B.shape[0]
+        #if not (A - B).any():#AB对齐，找到了重合区，返回此时的分界位(这种需要的匹配度太强了，查一点点颜色就完蛋了)
+        C = A - B
+        CS = stats.mode(C.reshape(-1,3))
+        if not CS[0][0].any() and (CS[1][0][0] > 0.9*C.reshape(-1,3).shape[0]):#模糊之前也得保证超过9成的像素点无差异
+            C[(C <50) | (C>200)] = 0
+            if C.max() == 0:#增加一点模糊话，针对单个像素点颜色
+                return b.shape[0] - B.shape[0]
     
     return b.shape[0]#到最后都没有重合则首尾相接
 
@@ -67,9 +74,11 @@ def DirCombine(dirPath,picType='bmp',fileName = 'temp.jpg'):
         return
     CombinePic(fileList[0],fileList[1],fileName)#先拿出来前两张生成初始目标图
     for img in fileList[2:]:#一张张追加长度
-        CombinePic(fileName,img)
+        CombinePic(fileName,img,fileName)
 
 
 if __name__ == "__main__":
-    DirCombine(r'待拼接图片文件夹')
-    print('Finish')
+    if len(sys.argv) > 2:
+        DirCombine(sys.argv[1:])
+    else:
+        DirCombine(r"待拼接文件夹")
