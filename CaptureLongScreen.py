@@ -98,8 +98,11 @@ def DirCombine(dirPath,fileName = 'temp.jpg',picType = '*',similar = 0.85,low = 
 
 
 if __name__ == "__main__":
-    if len(sys.argv) > 1:
-        eval(sys.argv[1:]+str(tuple(sys.argv[2:])))#eval('DirCombine(A,B)')等效于执行DirCombine(A,B)
-    else:
-        DirCombine("")
-    print('拼接完成')
+    try:
+        if len(sys.argv) > 1:
+            eval(str(sys.argv[1])+str(tuple(sys.argv[2:])))#eval('DirCombine(A,B)')等效于执行DirCombine(A,B)
+        else:
+            DirCombine("")
+        print('拼接完成')
+    except BaseException as e:
+        print(e)
