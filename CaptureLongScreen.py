@@ -73,8 +73,8 @@ def CombinePic(imgA,imgB,fileName,similar = 0.85,low = 50,heigh = 200,CombineTyp
         img_new.paste(b.crop(rect),(0,a.height))
     else:
         img_new = Image.new('RGB',(a.width+b_value, a.height))
-        rect = b_value,b.height,b.width,b.height
-        img_new.paste(b.crop(rect),(a.width,0))
+        rect = b_value,0,b.width,b.height
+        img_new.paste(b.crop(rect),(img_new.width - b.width + b_value,0))
     img_new.paste(a,(0,0))
     a.close()
     b.close()
