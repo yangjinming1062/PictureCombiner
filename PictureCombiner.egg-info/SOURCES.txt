@@ -1,8 +1,0 @@
-README.md
-setup.py
-PictureCombiner/PictureCombiner.py
-PictureCombiner/__init__.py
-PictureCombiner.egg-info/PKG-INFO
-PictureCombiner.egg-info/SOURCES.txt
-PictureCombiner.egg-info/dependency_links.txt
-PictureCombiner.egg-info/top_level.txt
